@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../src/utils/models/User.js';
-import db from '../src/lib/db.js';
+import User from '@/src/utils/models/User.js';
+import db from '@/src/lib/db.js';
 import { NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET; 
