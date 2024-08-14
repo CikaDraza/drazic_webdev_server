@@ -9,12 +9,34 @@ export async function PUT(request, { params }) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ message: 'No token provided' }, { status: 401 });
+      return new NextResponse(
+        JSON.stringify({ message: 'No token provided' }),
+        {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
     const user = await verifyToken(token);
     if (!user || !user.isAdmin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 403 });
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
     await db.connect();
@@ -22,13 +44,46 @@ export async function PUT(request, { params }) {
     const product = await Product.findByIdAndUpdate(id, updatedData, { new: true });
 
     if (!product) {
-      return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ message: 'Product not found' }),
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
-    return NextResponse.json(product, { status: 200 });
+    return new NextResponse(
+      JSON.stringify(product),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error updating product:', error);
-    return NextResponse.json({ message: 'Failed to update project' }, { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: 'Failed to update product' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'PUT, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } finally {
     await db.disconnect();
   }
@@ -40,26 +95,96 @@ export async function DELETE(request, { params }) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ message: 'No token provided' }, { status: 401 });
+      return new NextResponse(
+        JSON.stringify({ message: 'No token provided' }),
+        {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
     const user = await verifyToken(token);
     if (!user || !user.isAdmin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 403 });
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
     await db.connect();
     const result = await Product.findByIdAndDelete(id);
 
     if (!result) {
-      return NextResponse.json({ message: 'Project not found' }, { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ message: 'Product not found' }),
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+            'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
-    return NextResponse.json({ message: 'Project deleted successfully' }, { status: 200 });
+    return new NextResponse(
+      JSON.stringify({ message: 'Product deleted successfully' }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
-    console.error('Error deleting project:', error);
-    return NextResponse.json({ message: 'Failed to delete project' }, { status: 500 });
+    console.error('Error deleting product:', error);
+    return new NextResponse(
+      JSON.stringify({ message: 'Failed to delete product' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } finally {
     await db.disconnect();
   }
+}
+
+// Handle OPTIONS method for preflight requests
+export async function OPTIONS() {
+  return new NextResponse(
+    JSON.stringify({}),
+    {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    }
+  );
 }
