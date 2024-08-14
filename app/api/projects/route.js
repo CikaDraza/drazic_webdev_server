@@ -1,16 +1,40 @@
 import db from '@/src/lib/db.js';
 import Product from '@/src/utils/models/Product.js';
 import { NextResponse } from 'next/server';
+import { verifyToken } from '@/src/utils/auth'; 
 
 export async function GET(request) {
   try {
     await db.connect();
-    const projects = await Product.find().lean();
-    await db.disconnect();
-    return NextResponse.json(projects, { status: 200 });
+    const projects = await Product.find();
+    return new NextResponse(
+      JSON.stringify(projects),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error fetching projects:', error);
-    return NextResponse.json({ error: 'Error fetching projects' }, { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: 'Failed to fetch projects' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
+  } finally {
+    await db.disconnect();
   }
 }
 
@@ -18,23 +42,65 @@ export async function POST(request) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
     if (!token) {
-      return NextResponse.json({ message: 'No token provided' }, { status: 401 });
+      return new NextResponse(
+        JSON.stringify({ message: 'No token provided' }),
+        { status: 401 }
+      );
     }
 
-    const user = await verifyToken(token); // Verify the token and get the user
+    const user = await verifyToken(token);
     if (!user || !user.isAdmin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 403 });
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        { status: 403 }
+      );
     }
 
     await db.connect();
     const project = await request.json();
-    const newProject = new Project(project);
+    const newProject = new Product(project);
     await newProject.save();
-    return NextResponse.json(newProject, { status: 201 });
+    return new NextResponse(
+      JSON.stringify(newProject),
+      {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error creating project:', error);
-    return NextResponse.json({ message: 'Failed to create project' }, { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ message: 'Failed to create project' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } finally {
     await db.disconnect();
   }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(
+    JSON.stringify({}),
+    {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    }
+  );
 }

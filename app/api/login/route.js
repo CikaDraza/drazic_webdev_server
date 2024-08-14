@@ -89,7 +89,6 @@ export async function POST(request) {
       }
     );
   } finally {
-    // Disconnect from MongoDB
     await db.disconnect();
   }
 }

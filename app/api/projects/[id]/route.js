@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@/src/lib/db';
-import Project from '@/src/utils/models/Product';
+import Product from '@/src/utils/models/Product';
 import { verifyToken } from '@/src/utils/auth';
 
 export async function PUT(request, { params }) {
@@ -19,15 +19,15 @@ export async function PUT(request, { params }) {
 
     await db.connect();
     const updatedData = await request.json();
-    const project = await Project.findByIdAndUpdate(id, updatedData, { new: true });
+    const product = await Product.findByIdAndUpdate(id, updatedData, { new: true });
 
-    if (!project) {
-      return NextResponse.json({ message: 'Project not found' }, { status: 404 });
+    if (!product) {
+      return NextResponse.json({ message: 'Product not found' }, { status: 404 });
     }
 
-    return NextResponse.json(project, { status: 200 });
+    return NextResponse.json(product, { status: 200 });
   } catch (error) {
-    console.error('Error updating project:', error);
+    console.error('Error updating product:', error);
     return NextResponse.json({ message: 'Failed to update project' }, { status: 500 });
   } finally {
     await db.disconnect();
@@ -43,13 +43,13 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ message: 'No token provided' }, { status: 401 });
     }
 
-    const user = await verifyToken(token); // Verify the token and get the user
+    const user = await verifyToken(token);
     if (!user || !user.isAdmin) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 403 });
     }
 
     await db.connect();
-    const result = await Project.findByIdAndDelete(id);
+    const result = await Product.findByIdAndDelete(id);
 
     if (!result) {
       return NextResponse.json({ message: 'Project not found' }, { status: 404 });
