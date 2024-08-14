@@ -6,9 +6,9 @@ import { NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET; 
 
-export async function GET(request) {
+export async function POST(request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password } = await request.body;
 
     // Connect to MongoDB
     await db.connect();

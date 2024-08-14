@@ -3,7 +3,7 @@ import data from "@/src/utils/data";
 import Product from "@/src/utils/models/Product";
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function POST() {
   try {
     await db.connect();
     await Product.deleteMany();
