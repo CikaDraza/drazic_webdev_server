@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET; 
 
-export async function POST(request) {
+export async function GET(request) {
   try {
     const { email, password } = await request.json();
 
