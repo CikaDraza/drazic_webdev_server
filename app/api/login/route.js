@@ -6,9 +6,20 @@ import { NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET; 
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(request) {
   try {
-    const { email, password } = await request.body;
+    const { email, password } = await request.json();
 
     // Connect to MongoDB
     await db.connect();
@@ -24,8 +35,8 @@ export async function POST(request) {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-          }
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
         }
       );
     }
@@ -41,8 +52,8 @@ export async function POST(request) {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-          }
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
         }
       );
     }
@@ -58,8 +69,8 @@ export async function POST(request) {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        }
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
       }
     );
   } catch (error) {
@@ -73,8 +84,8 @@ export async function POST(request) {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        }
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
       }
     );
   } finally {
