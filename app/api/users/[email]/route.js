@@ -2,28 +2,60 @@ import db from "@/src/lib/db"; // Import your database connection
 import User from "@/src/utils/models/User"; // Import your User model
 import { NextResponse } from 'next/server';
 
-export async function GET(request) {
+export async function GET(request, { params }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email');
+    const { email } = params;
 
-    if (!email) {
-      return NextResponse.json({ message: 'Email query parameter is required' }, { status: 400 });
-    }
+    // Connect to MongoDB
+    await db.connect();
 
-    await db.connect(); // Connect to the database
-
-    const user = await User.findOne({ email }); // Find user by email
-
-    await db.disconnect(); // Disconnect from the database
-
+    // Find user by email
+    const user = await User.findOne({ email });
     if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ message: 'User not found' }),
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
     }
 
-    return NextResponse.json(user, { status: 200 });
+    // Return user data
+    return new NextResponse(
+      JSON.stringify(user),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
-    console.error('Error fetching user by email:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error('Error fetching user:', error);
+
+    return new NextResponse(
+      JSON.stringify({ message: 'Internal Server Error' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
+  } finally {
+    // Disconnect from MongoDB
+    await db.disconnect();
   }
 }
