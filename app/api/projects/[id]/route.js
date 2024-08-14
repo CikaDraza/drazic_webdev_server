@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import db from '@/src/lib/db';
-import Project from '@/src/utils/models/Project';
-import { verifyToken } from '@/src/utils/auth';
+import db from '@/src/lib/db.js';
+import Project from '@/src/utils/models/Project.js';
+import { verifyToken } from '@/src/utils/auth.js';
 
 export async function PUT(request, { params }) {
   const { id } = params;
