@@ -57,8 +57,8 @@ export async function POST(request) {
     }
 
     await db.connect();
-    const project = await request.json();
-    const newProject = new Project(project);
+    const projectData = await request.json();
+    const newProject = new Project(projectData);
     await newProject.save();
     return new NextResponse(
       JSON.stringify(newProject),
@@ -73,9 +73,9 @@ export async function POST(request) {
       }
     );
   } catch (error) {
-    console.error('Error creating project:', error);
+    console.error('Error creating project:', error.message); // Log the specific error
     return new NextResponse(
-      JSON.stringify({ message: 'Failed to create project' }),
+      JSON.stringify({ message: `Failed to create project: ${error.message}` }),
       {
         status: 500,
         headers: {
@@ -92,15 +92,12 @@ export async function POST(request) {
 }
 
 export async function OPTIONS() {
-  return new NextResponse(
-    JSON.stringify({}),
-    {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    }
-  );
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
 }
