@@ -1,5 +1,5 @@
 import db from '@/src/lib/db.js';
-import Project from '@/src/utils/models/Project.js';
+import Project from '@/src/utils/models/Project';
 import { NextResponse } from 'next/server';
 import { verifyToken } from '@/src/utils/auth'; 
 

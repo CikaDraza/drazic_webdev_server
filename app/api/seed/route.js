@@ -3,11 +3,11 @@ import data from "@/src/utils/data";
 import Project from "@/src/utils/models/Project";
 import { NextResponse } from 'next/server';
 
-export async function POST() {
+export async function GET() {
   try {
     await db.connect();
     await Project.deleteMany();
-    await Project.insertMany(data.project);
+    await Project.insertMany(data?.project);
     await db.disconnect();
 
     return NextResponse.json({ message: 'Seeding successful' }, { status: 200 });
