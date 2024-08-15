@@ -1,12 +1,12 @@
 import db from '@/src/lib/db.js';
-import Product from '@/src/utils/models/Product.js';
+import Project from '@/src/utils/models/Project.js';
 import { NextResponse } from 'next/server';
 import { verifyToken } from '@/src/utils/auth'; 
 
 export async function GET(request) {
   try {
     await db.connect();
-    const projects = await Product.find();
+    const projects = await Project.find();
     return new NextResponse(
       JSON.stringify(projects),
       {
@@ -58,7 +58,7 @@ export async function POST(request) {
 
     await db.connect();
     const project = await request.json();
-    const newProject = new Product(project);
+    const newProject = new Project(project);
     await newProject.save();
     return new NextResponse(
       JSON.stringify(newProject),

@@ -1,5 +1,5 @@
 const data = {
-  products: [
+  project: [
     {
       title: 'Electricons',
       description: 'A great selection of appliances for your home - white goods, small household appliances, televisions, computers, telephones, care appliances, everything you need in one place.',

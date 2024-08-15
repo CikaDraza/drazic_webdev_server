@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@/src/lib/db';
-import Product from '@/src/utils/models/Product';
+import Project from '@/src/utils/models/Project';
 import { verifyToken } from '@/src/utils/auth';
 
 export async function PUT(request, { params }) {
@@ -41,11 +41,11 @@ export async function PUT(request, { params }) {
 
     await db.connect();
     const updatedData = await request.json();
-    const product = await Product.findByIdAndUpdate(id, updatedData, { new: true });
+    const project = await Project.findByIdAndUpdate(id, updatedData, { new: true });
 
-    if (!product) {
+    if (!project) {
       return new NextResponse(
-        JSON.stringify({ message: 'Product not found' }),
+        JSON.stringify({ message: 'Project not found' }),
         {
           status: 404,
           headers: {
@@ -59,7 +59,7 @@ export async function PUT(request, { params }) {
     }
 
     return new NextResponse(
-      JSON.stringify(product),
+      JSON.stringify(project),
       {
         status: 200,
         headers: {
@@ -126,11 +126,11 @@ export async function DELETE(request, { params }) {
     }
 
     await db.connect();
-    const result = await Product.findByIdAndDelete(id);
+    const result = await Project.findByIdAndDelete(id);
 
     if (!result) {
       return new NextResponse(
-        JSON.stringify({ message: 'Product not found' }),
+        JSON.stringify({ message: 'Project not found' }),
         {
           status: 404,
           headers: {
@@ -144,7 +144,7 @@ export async function DELETE(request, { params }) {
     }
 
     return new NextResponse(
-      JSON.stringify({ message: 'Product deleted successfully' }),
+      JSON.stringify({ message: 'Project deleted successfully' }),
       {
         status: 200,
         headers: {
@@ -156,9 +156,9 @@ export async function DELETE(request, { params }) {
       }
     );
   } catch (error) {
-    console.error('Error deleting product:', error);
+    console.error('Error deleting Project:', error);
     return new NextResponse(
-      JSON.stringify({ message: 'Failed to delete product' }),
+      JSON.stringify({ message: 'Failed to delete Project' }),
       {
         status: 500,
         headers: {
