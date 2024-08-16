@@ -41,7 +41,6 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
-    console.log('Token received:', token); // Debugging line
 
     if (!token) {
       return new NextResponse(
@@ -51,7 +50,6 @@ export async function POST(request) {
     }
 
     const user = await verifyToken(token);
-    console.log('User verified:', user); // Debugging line
 
     if (!user || !user.isAdmin) {
       return new NextResponse(
@@ -67,20 +65,9 @@ export async function POST(request) {
     const newProject = new Project(project);
     await newProject.save();
 
-    return new NextResponse(
-      JSON.stringify(newProject),
-      {
-        status: 201,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      }
-    );
+    return NextResponse.redirect(new URL('/api/projects', request.url));
   } catch (error) {
-    console.error('Error creating project:', error); // Server-side error logging
+    console.error('Error creating project:', error);
     return new NextResponse(
       JSON.stringify({ message: 'Failed to create project' }),
       {
