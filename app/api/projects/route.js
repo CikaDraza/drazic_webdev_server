@@ -40,6 +40,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    await db.connect();
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
@@ -58,7 +59,6 @@ export async function POST(request) {
       );
     }
 
-    await db.connect();
     const project = await request.json();
     console.log('Project data received:', project); // Debugging line
 
@@ -75,7 +75,7 @@ export async function POST(request) {
       return new NextResponse(null, { status: 200, headers: preflightHeaders });
     }
 
-    return NextResponse.redirect(new URL('/api/projects', request.url));
+    return NextResponse.redirect(new URL('./api/projects/', request.url));
   } catch (error) {
     console.error('Error creating project:', error);
     return new NextResponse(
