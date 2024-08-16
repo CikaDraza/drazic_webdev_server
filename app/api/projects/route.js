@@ -65,6 +65,16 @@ export async function POST(request) {
     const newProject = new Project(project);
     await newProject.save();
 
+    const preflightHeaders = {
+      'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+  
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 200, headers: preflightHeaders });
+    }
+
     return NextResponse.redirect(new URL('/api/projects', request.url));
   } catch (error) {
     console.error('Error creating project:', error);
