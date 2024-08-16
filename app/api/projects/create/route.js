@@ -15,7 +15,7 @@ export async function OPTIONS() {
   });
 }
 
-export async function POST(request) {
+export async function GET(request) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
 
