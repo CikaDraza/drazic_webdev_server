@@ -15,7 +15,7 @@ export async function OPTIONS() {
   });
 }
 
-export async function GET(request) {
+export async function POST(request) {
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
 
@@ -36,7 +36,7 @@ export async function GET(request) {
     }
 
     await db.connect();
-    const project = await request;
+    const project = await request.json(); // Corrected here
     console.log('Project data received:', project);
 
     const newProject = new Project(project);
