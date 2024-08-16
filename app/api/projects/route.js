@@ -3,6 +3,18 @@ import Project from '@/src/utils/models/Project';
 import { NextResponse } from 'next/server';
 import { verifyToken } from '@/src/utils/auth'; 
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400', // Cache the preflight response for 1 day
+    },
+  });
+}
+
 export async function GET(request) {
   try {
     await db.connect();
@@ -40,7 +52,6 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    await db.connect();
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
@@ -59,23 +70,25 @@ export async function POST(request) {
       );
     }
 
+    await db.connect();
     const project = await request.json();
-    console.log('Project data received:', project); // Debugging line
+    console.log('Project data received:', project);
 
     const newProject = new Project(project);
     await newProject.save();
 
-    const preflightHeaders = {
-      'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    };
-  
-    if (request.method === 'OPTIONS') {
-      return new NextResponse(null, { status: 200, headers: preflightHeaders });
-    }
-
-    return NextResponse.redirect(new URL('./api/projects/', request.url));
+    return new NextResponse(
+      JSON.stringify(newProject),
+      {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error creating project:', error);
     return new NextResponse(
