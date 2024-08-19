@@ -1,8 +1,7 @@
+import { verifyToken } from '@/src/utils/auth';
+import Testimonial from '@/src/utils/models/Testimonial';
+import User from '@/src/utils/models/User';
 import { NextResponse } from 'next/server';
-import db from 'your-db-connection';
-import Testimonial from 'your-testimonial-model';
-import User from 'your-user-model';
-import verifyToken from 'your-token-verification';
 
 export async function GET(request) {
   const origin = request.headers.get('Origin');
