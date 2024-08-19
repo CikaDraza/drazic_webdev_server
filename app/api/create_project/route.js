@@ -7,10 +7,10 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Max-Age': '86400', // Cache the preflight response for 1 day
+      'Access-Control-Max-Age': '86400',
     },
   });
 }
@@ -22,24 +22,31 @@ export async function POST(request) {
     if (!token) {
       return new NextResponse(
         JSON.stringify({ message: 'No token provided' }),
-        { status: 401 }
+        { status: 401, headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
       );
     }
 
     const user = await verifyToken(token);
-
     if (!user || !user.isAdmin) {
       return new NextResponse(
         JSON.stringify({ message: 'Unauthorized' }),
-        { status: 403 }
+        { status: 403, headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
       );
     }
 
     await db.connect();
-    const project = await request.json(); // Corrected here
-    console.log('Project data received:', project);
-
-    const newProject = new Project(project);
+    const projectData = await request.json();
+    const newProject = new Project(projectData);
     await newProject.save();
 
     return new NextResponse(
@@ -48,7 +55,7 @@ export async function POST(request) {
         status: 201,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Origin': 'http://localhost:5173',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
@@ -62,7 +69,7 @@ export async function POST(request) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'https://drazic-webdev.vercel.app',
+          'Access-Control-Allow-Origin': 'http://localhost:5173',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
