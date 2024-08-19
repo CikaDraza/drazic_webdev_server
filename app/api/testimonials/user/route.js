@@ -3,6 +3,20 @@ import Testimonial from '@/src/utils/models/Testimonial';
 import User from '@/src/utils/models/User';
 import { NextResponse } from 'next/server';
 
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+}
+
 export async function GET(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
@@ -10,6 +24,8 @@ export async function GET(request) {
   try {
     // Get the token from the Authorization header
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+    console.log(request.headers.get('Authorization'));
+    
     if (!token) {
       return new NextResponse(
         JSON.stringify({ message: 'No token provided' }),
@@ -42,7 +58,6 @@ export async function GET(request) {
       );
     }
 
-    // Fetch the user's full details using the decoded token
     await db.connect();
     const user = await User.findById(decoded._id);
     if (!user) {
@@ -59,11 +74,13 @@ export async function GET(request) {
         }
       );
     }
+    console.log(decoded, user);
 
     // Fetch testimonials based on the user's role
     const testimonials = user.isAdmin 
       ? await Testimonial.find() 
       : await Testimonial.find({ user: user._id });
+console.log(testimonials);
 
     return new NextResponse(
       JSON.stringify(testimonials),
