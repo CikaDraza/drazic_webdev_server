@@ -3,10 +3,9 @@ import db from '@/src/lib/db';
 import Project from '@/src/utils/models/Project';
 import { verifyToken } from '@/src/utils/auth';
 
-const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
-
-export async function OPTIONS() {
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -19,6 +18,8 @@ export async function OPTIONS() {
 }
 
 export async function PUT(request, { params }) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   const { id } = params;
 
   try {
@@ -105,6 +106,8 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   try {
     const { id } = params;
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');

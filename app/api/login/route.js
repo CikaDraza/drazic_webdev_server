@@ -6,10 +6,9 @@ import { NextResponse } from 'next/server';
 
 const SECRET_KEY = process.env.JWT_SECRET; 
 
-const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
-
-export async function OPTIONS() {
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -21,6 +20,8 @@ export async function OPTIONS() {
 }
 
 export async function POST(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   try {
     const { email, password } = await request.json();
 

@@ -3,12 +3,11 @@ import User from "@/src/utils/models/User"; // Import your User model
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
-
 const SECRET_KEY = process.env.JWT_SECRET;
 
 export async function GET(request, { params }) {
+const origin = request.headers.get('Origin');
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   try {
     const { email } = params;
 
@@ -104,7 +103,9 @@ export async function GET(request, { params }) {
 }
 
 // Handle OPTIONS request for preflight checks
-export async function OPTIONS() {
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   return new NextResponse(
     null,
     {

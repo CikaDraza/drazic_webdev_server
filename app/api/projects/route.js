@@ -2,10 +2,9 @@ import db from '@/src/lib/db.js';
 import Project from '@/src/utils/models/Project';
 import { NextResponse } from 'next/server';
 
-const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
-
-export async function OPTIONS() {
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -18,6 +17,8 @@ export async function OPTIONS() {
 }
 
 export async function GET(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   try {
     await db.connect();
     const projects = await Project.find();
