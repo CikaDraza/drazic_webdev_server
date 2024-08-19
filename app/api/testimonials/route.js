@@ -56,44 +56,14 @@ export async function GET(request) {
 export async function POST(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
-  
-    try {
-      const token = request.headers.get('Authorization')?.replace('Bearer ', '');
-  
-      if (!token) {
-        return new NextResponse(
-          JSON.stringify({ message: 'No token provided' }),
-          { status: 401, headers: {
-              'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-              'Access-Control-Allow-Methods': 'POST, OPTIONS',
-              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            },
-          }
-        );
-      }
-  
-      const user = await verifyToken(token);
-      if (!user || !user.isAdmin) {
-        return new NextResponse(
-          JSON.stringify({ message: 'Unauthorized' }),
-          { status: 403, headers: {
-              'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-              'Access-Control-Allow-Methods': 'POST, OPTIONS',
-              'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            },
-          }
-        );
-      }
-  
-      await db.connect();
-      const testimonialData = await request.json();
-      const newTestimonial = new Testimonial(testimonialData);
-      await newTestimonial.save();
-  
+
+  try {
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+    if (!token) {
       return new NextResponse(
-        JSON.stringify(newTestimonial),
+        JSON.stringify({ message: 'No token provided' }),
         {
-          status: 201,
+          status: 401,
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
@@ -102,21 +72,58 @@ export async function POST(request) {
           },
         }
       );
-    } catch (error) {
-      console.error('Error creating testimonial:', error);
-      return new NextResponse(
-        JSON.stringify({ message: 'Failed to create testimonial' }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          },
-        }
-      );
-    } finally {
-      await db.disconnect();
     }
+
+    const user = await verifyToken(token);
+    if (!user) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
+    }
+
+    await db.connect();
+    const testimonialData = await request.json();
+    testimonialData.user = user._id; // Associate the testimonial with the user
+
+    const newTestimonial = new Testimonial(testimonialData);
+    await newTestimonial.save();
+
+    return new NextResponse(
+      JSON.stringify(newTestimonial),
+      {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('Error creating testimonial:', error);
+    return new NextResponse(
+      JSON.stringify({ message: 'Failed to create testimonial' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
+  } finally {
+    await db.disconnect();
   }
+}

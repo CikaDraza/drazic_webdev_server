@@ -27,7 +27,7 @@ const data = {
       client_title: 'Infogram CTO',
       rating: '4',
       text: 'Kroz otvorenu komunikaciju, međusobno učenje i neprestano usavršavanje, mi gradimo snažnu radnu kulturu koja podstiče inovacije, kreativnost i lični razvoj. Naša posvećenost timskom radu doprinosi stvaranju visoko efikasnih rešenja koja zadovoljavaju potrebe naših klijenata.',
-      image_url: 'https://media.licdn.com/dms/image/v2/C5603AQFrR4dWcIy_9A/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1555063527208?e=1729728000&v=beta&t=1gQEzs-pR1lxtwlozQm6lU87tjPf8tGheGMWUltwoFI',
+      image_url: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     },
   ]
 }
