@@ -3,11 +3,14 @@ import { verifyToken } from "@/src/utils/auth";
 import Project from "@/src/utils/models/Project";
 import { NextResponse } from "next/server";
 
+const origin = request.headers.get('Origin');
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:5173',
+      'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Max-Age': '86400',
@@ -23,7 +26,7 @@ export async function POST(request) {
       return new NextResponse(
         JSON.stringify({ message: 'No token provided' }),
         { status: 401, headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           },
@@ -36,7 +39,7 @@ export async function POST(request) {
       return new NextResponse(
         JSON.stringify({ message: 'Unauthorized' }),
         { status: 403, headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           },
@@ -55,7 +58,7 @@ export async function POST(request) {
         status: 201,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:5173',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
@@ -69,7 +72,7 @@ export async function POST(request) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:5173',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },

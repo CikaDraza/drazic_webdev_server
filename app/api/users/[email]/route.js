@@ -3,8 +3,8 @@ import User from "@/src/utils/models/User"; // Import your User model
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-const origin = process.env.NODE_ENV === 'production'
-const API_BASE_URL = origin ? 'https://drazic-webdev.vercel.app' : 'http://localhost:3000/api';
+const origin = request.headers.get('Origin');
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -21,7 +21,7 @@ export async function GET(request, { params }) {
           status: 401,
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           },
@@ -41,7 +41,7 @@ export async function GET(request, { params }) {
           status: 401,
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           },
@@ -61,7 +61,7 @@ export async function GET(request, { params }) {
           status: 404,
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           },
@@ -76,7 +76,7 @@ export async function GET(request, { params }) {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
@@ -91,7 +91,7 @@ export async function GET(request, { params }) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
@@ -110,7 +110,7 @@ export async function OPTIONS() {
     {
       status: 204,
       headers: {
-        'Access-Control-Allow-Origin': `${API_BASE_URL}`,
+        'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
