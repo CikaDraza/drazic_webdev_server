@@ -14,8 +14,8 @@ export async function GET(request, { params }) {
         { status: 404 }
       );
     }
-
-    // Fetch testimonials based on admin status
+    
+    // Fetch testimonials based on admin status    
     const testimonials = user?.isAdmin
       ? await Testimonial.find()
       : await Testimonial.find({ client_email: email });
