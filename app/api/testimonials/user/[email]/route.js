@@ -16,7 +16,7 @@ export async function GET(request, { params }) {
     }
 
     // Fetch testimonials based on admin status
-    const testimonials = user.isAdmin
+    const testimonials = user?.isAdmin
       ? await Testimonial.find()
       : await Testimonial.find({ client_email: email });
 

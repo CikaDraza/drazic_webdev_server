@@ -23,6 +23,7 @@ const data = {
   ],
   testimonial: [
     {
+      client_email: 'zsinfo@infogram.rs',
       client_name: 'Zoran Stevovic',
       client_title: 'Infogram CTO',
       rating: '4',
