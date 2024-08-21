@@ -10,7 +10,7 @@ export async function OPTIONS(request) {
     headers: {
       'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400', // Cache the preflight response for 1 day
     },
   });
@@ -32,23 +32,11 @@ export async function GET(request, { params }) {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Headers': 'Content-Type',
           },
         }
       );
     }
-    return new NextResponse(
-      JSON.stringify(user),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      }
-    );
     
     // Fetch testimonials based on admin status    
     const testimonials = user?.isAdmin
@@ -63,7 +51,7 @@ export async function GET(request, { params }) {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Headers': 'Content-Type',
           },
         }
       );
@@ -77,7 +65,7 @@ export async function GET(request, { params }) {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Headers': 'Content-Type',
         },
       }
     );
