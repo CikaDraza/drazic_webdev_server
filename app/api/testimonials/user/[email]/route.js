@@ -22,7 +22,7 @@ export async function GET(request, { params }) {
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
   try {
     // Check if the user is an admin
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
     if (!user) {
       return new NextResponse(
         JSON.stringify({ message: 'User not found' }),
@@ -41,7 +41,7 @@ export async function GET(request, { params }) {
     // Fetch testimonials based on admin status    
     const testimonials = user?.isAdmin
       ? await Testimonial.find()
-      : await Testimonial.find({ client_email: email });
+      : await Testimonial.find({ client_email: email }).lean();
 
       return new NextResponse(
         JSON.stringify(testimonials),
