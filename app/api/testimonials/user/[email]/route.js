@@ -1,5 +1,4 @@
 import Testimonial from '@/src/utils/models/Testimonial';
-import User from '@/src/utils/models/User';
 import { NextResponse } from 'next/server';
 
 export async function OPTIONS(request) {
@@ -21,35 +20,9 @@ export async function GET(request, { params }) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
 
-  try {
-    console.log(`Fetching user with email: ${email}`);
-
-    // Check if the user is an admin
-    const user = await User.findOne({ email }).lean();
-    if (!user) {
-      console.log(`User not found: ${email}`);
-      return new NextResponse(
-        JSON.stringify({ message: 'User not found' }),
-        {
-          status: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-            'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-          },
-        }
-      );
-    }
+  try {        
     
-    console.log(`User found: ${JSON.stringify(user)}`);
-    
-    // Fetch testimonials based on admin status    
-    const testimonials = user.isAdmin
-      ? await Testimonial.find().lean()
-      : await Testimonial.find({ client_email: email }).lean();
-
-    console.log(`Testimonials fetched: ${testimonials.length}`);
+    const testimonials = await Testimonial.findOne({ client_email: email }).lean();
 
     return new NextResponse(
       JSON.stringify(testimonials),
