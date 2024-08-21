@@ -1,4 +1,5 @@
 import db from '@/src/lib/db.js';
+import { verifyToken } from '@/src/utils/auth';
 import Testimonial from '@/src/utils/models/Testimonial';
 import { NextResponse } from 'next/server';
 
@@ -58,6 +59,7 @@ export async function POST(request) {
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
 
   try {
+    await db.connect();
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');
     if (!token) {
       return new NextResponse(
@@ -90,9 +92,7 @@ export async function POST(request) {
       );
     }
 
-    await db.connect();
     const testimonialData = await request.json();
-    testimonialData.user = user._id; // Associate the testimonial with the user
 
     const newTestimonial = new Testimonial(testimonialData);
     await newTestimonial.save();
@@ -127,3 +127,4 @@ export async function POST(request) {
     await db.disconnect();
   }
 }
+  
