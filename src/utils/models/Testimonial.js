@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const testimonialSchema = new mongoose.Schema(
   {
-    client_email: {type: String, required: true},
+    client_email: { type: String, required: true, unique: true, index: true },
     client_name: {type: String, required: true},
     client_title: {type: String, required: true},
     rating: {type: String, required: true},
