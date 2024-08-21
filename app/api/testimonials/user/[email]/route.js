@@ -26,9 +26,29 @@ export async function GET(request, { params }) {
     if (!user) {
       return new NextResponse(
         JSON.stringify({ message: 'User not found' }),
-        { status: 404 }
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
       );
     }
+    return new NextResponse(
+      JSON.stringify(user),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
     
     // Fetch testimonials based on admin status    
     const testimonials = user?.isAdmin
