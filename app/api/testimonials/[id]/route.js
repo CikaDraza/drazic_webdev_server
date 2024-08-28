@@ -39,8 +39,8 @@ export async function PUT(request, { params }) {
       );
     }
 
-    const user = await verifyToken(token);
-    if (!user || !user.isAdmin) {
+    const user = await verifyToken(token);    
+    if (!user) {
       return new NextResponse(
         JSON.stringify({ message: 'Unauthorized' }),
         {
