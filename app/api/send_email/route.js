@@ -1,8 +1,24 @@
 import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
+
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+}
 
 export async function POST(request) {
   const origin = request.headers.get('Origin');
-  const { fullName, email, phone, city, text } = await request.json();
+  const { fullName, email, phone, city, text } = await request;
 
   const transporter = nodemailer.createTransport({
     host: 'mail.privateemail.com',
