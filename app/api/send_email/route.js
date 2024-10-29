@@ -58,7 +58,7 @@ export async function POST(request) {
 
   // Email to the business
   const businessMailOptions = {
-    from: process.env.BUSINESS_EMAIL,
+    from: email,
     to: process.env.BUSINESS_EMAIL,
     subject: `New message from ${fullName}`,
     replyTo: email,
