@@ -14,6 +14,10 @@ export async function OPTIONS(request) {
 }
 
 export async function GET(request) {
+  return NextResponse.json({ status: 204, message: 'Hello There' });
+}
+
+export async function POST(request) {
   const data = request.body;
   console.log(data);
 
@@ -55,8 +59,7 @@ export async function GET(request) {
   try {
     await transporter.sendMail(userMailOptions);
     console.log('E-mail korisniku poslat');
-    return new NextResponse(
-      JSON.stringify({ message: 'Message received and emails sent successfully.' }),
+    return NextResponse.json({ message: 'Message received and emails sent successfully.' },
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -69,8 +72,7 @@ export async function GET(request) {
   try {
     await transporter.sendMail(mailOptions);
     console.log('E-mail poslat');
-    return new NextResponse(
-      JSON.stringify({ message: 'Message received and emails sent successfully.' }),
+    return NextResponse.json({ message: 'Message received and emails sent successfully.' },
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' },
