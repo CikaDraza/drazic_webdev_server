@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
+  const allowedOrigins = ['http://localhost:5173', 'https://keramicar-lale.online'];
   const responseHeaders = {
     'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -18,18 +18,19 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const data = request.body;
-  console.log(data);
+  try {
+    const data = await request.json();
+    console.log(data);
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "drazic.milan@gmail.com",
+        pass: "dxko xmrp fqfz tdkd"
+      },
+    });
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: "drazic.milan@gmail.com",
-      pass: "dxko xmrp fqfz tdkd"
-    },
-  });
-
-  const htmlBody = `
+    const htmlBody = `
     <html>
       <body>
         <p>Ime: ${data.fullName}</p>
@@ -40,45 +41,49 @@ export async function POST(request) {
     </html>
   `;
 
-  const userMailOptions = {
-    from: "drazic.milan@gmail.com",
-    to: data.email,
-    subject: 'Hvala vam sto ste nas kontaktirali',
-    text: 'Hvala vam. Vaša poruka je primljena i odgovorićemo vam uskoro.',
-    html: htmlBody,
-  };
+    const userMailOptions = {
+      from: "drazic.milan@gmail.com",
+      to: data.email,
+      subject: 'Hvala vam sto ste nas kontaktirali',
+      text: 'Hvala vam. Vaša poruka je primljena i odgovorićemo vam uskoro.',
+      html: htmlBody,
+    };
 
-  const mailOptions = {
-    from: data.email,
-    to: 'contact@drazic-webdev.dev',
-    subject: `Nova Poruka od ${data.email}`,
-    replyTo: data.email,
-    html: htmlBody,
-  };
+    const mailOptions = {
+      from: data.email,
+      to: 'info@keramicar-lale.online',
+      subject: `Nova Poruka od ${data.email}`,
+      replyTo: data.email,
+      html: htmlBody,
+    };
 
-  try {
-    await transporter.sendMail(userMailOptions);
-    console.log('E-mail korisniku poslat');
-    return NextResponse.json({ message: 'Message received and emails sent successfully.' },
-      { 
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );    
+    try {
+      await transporter.sendMail(userMailOptions);
+      return NextResponse.json({ message: 'Message received and emails sent successfully.' },
+        { 
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (error) {
+      console.error(`Greška prilikom slanja e-maila korisniku: ${data.fullName}`, error);
+    }
+
+    try {
+      await transporter.sendMail(mailOptions);
+      return NextResponse.json({ message: 'Message received and emails sent successfully.' },
+        { 
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (error) {
+      console.error(`Greška prilikom slanja e-maila: contact@drazic-webdev.dev`, error);
+    }
+
+    return NextResponse.json({ message: 'Email sent successfully' });
   } catch (error) {
-    console.error('Greška prilikom slanja e-maila korisniku:', error);
+    console.error("Error in sending email:", error);
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('E-mail poslat');
-    return NextResponse.json({ message: 'Message received and emails sent successfully.' },
-      { 
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );    
-  } catch (error) {
-    console.error(error);
-  }
-};
+}
