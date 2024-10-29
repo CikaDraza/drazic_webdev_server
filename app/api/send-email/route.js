@@ -2,18 +2,36 @@
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
-const transporter = nodemailer.createTransport({
-  host: 'mail.privateemail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
+
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
+}
 
 export async function POST(request) {
+  const origin = request.headers.get('Origin');
   const { fullName, email, phone, city, text } = await request.json();
+
+  console.log(fullName, email, phone, city, text);
+
+  const transporter = nodemailer.createTransport({
+    host: 'mail.privateemail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
   const htmlBody = `
     <html>
@@ -56,13 +74,32 @@ export async function POST(request) {
 
     return new NextResponse(
       JSON.stringify({ message: 'Message received and emails sent successfully.' }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { 
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Max-Age': '86400',
+        }
+      }
     );
+    
   } catch (error) {
     console.error('Error sending email:', error);
     return new NextResponse(
       JSON.stringify({ message: 'Error sending email' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Max-Age': '86400',
+        }
+      }
     );
   }
 }
