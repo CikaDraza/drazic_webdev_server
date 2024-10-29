@@ -13,7 +13,7 @@ export async function OPTIONS(request) {
   return new NextResponse(null, { status: 204, headers: responseHeaders });
 }
 
-export async function POST(request) {
+export async function GET(request) {
   const data = request.body;
   console.log(data);
 
