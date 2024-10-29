@@ -69,7 +69,6 @@ export async function POST(request) {
   try {
     await transporter.sendMail(mailOptions);
     console.log('E-mail poslat');
-    res.status(200).json({ message: 'Podaci su primljeni i obradjeni na serveru. E-mail je poslat.' });
     return new NextResponse(
       JSON.stringify({ message: 'Message received and emails sent successfully.' }),
       { 
@@ -79,6 +78,5 @@ export async function POST(request) {
     );    
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Došlo je do greške prilikom slanja e-maila.' });
   }
 };
