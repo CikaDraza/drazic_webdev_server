@@ -17,6 +17,10 @@ export async function OPTIONS(request) {
   });
 }
 
+export async function GET(request) {
+  return NextResponse.json({ msg: 'Hello from mailer', user: process.env.EMAIL_USER })
+}
+
 export async function POST(request) {
   const origin = request.headers.get('Origin');
   const { fullName, email, phone, city, text } = await request.json();
