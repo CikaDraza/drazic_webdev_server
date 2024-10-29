@@ -51,8 +51,8 @@ export async function POST(request) {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
         },
       }
     );
@@ -71,8 +71,8 @@ export async function POST(request) {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
         },
       }
     );
