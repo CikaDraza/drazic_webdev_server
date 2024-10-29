@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://keramicar-lale.online'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   const responseHeaders = {
     'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -18,6 +18,8 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   try {
     const data = await request.json();
     console.log(data);
@@ -62,7 +64,11 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Message received and emails sent successfully.' },
         { 
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          },
         }
       );
     } catch (error) {
@@ -74,7 +80,11 @@ export async function POST(request) {
       return NextResponse.json({ message: 'Message received and emails sent successfully.' },
         { 
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          },
         }
       );
     } catch (error) {
