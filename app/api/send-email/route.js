@@ -10,8 +10,8 @@ export async function OPTIONS(request) {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
     },
   });
@@ -79,8 +79,8 @@ export async function POST(request) {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Max-Age': '86400',
         }
       }
@@ -95,8 +95,8 @@ export async function POST(request) {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Max-Age': '86400',
         }
       }
