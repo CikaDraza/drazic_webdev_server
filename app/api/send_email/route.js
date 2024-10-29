@@ -14,8 +14,6 @@ export async function OPTIONS(request) {
 }
 
 export async function POST(request) {
-  const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   const data = request.body;
   console.log(data);
 
@@ -61,12 +59,7 @@ export async function POST(request) {
       JSON.stringify({ message: 'Message received and emails sent successfully.' }),
       { 
         status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }
+        headers: { 'Content-Type': 'application/json' },
       }
     );    
   } catch (error) {
@@ -81,12 +74,7 @@ export async function POST(request) {
       JSON.stringify({ message: 'Message received and emails sent successfully.' }),
       { 
         status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }
+        headers: { 'Content-Type': 'application/json' },
       }
     );    
   } catch (error) {
