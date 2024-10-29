@@ -9,7 +9,7 @@ export async function OPTIONS(request) {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
     },
@@ -18,7 +18,7 @@ export async function OPTIONS(request) {
 
 export async function POST(request) {
   const origin = request.headers.get('Origin');
-  const { fullName, email, phone, city, text } = await request;
+  const { fullName, email, phone, city, text } = await request.body;
 
   const transporter = nodemailer.createTransport({
     host: 'mail.privateemail.com',
@@ -50,12 +50,12 @@ export async function POST(request) {
     to: email,
     subject: 'Thank you for reaching out',
     text: 'Thank you for contacting us. We have received your message and will get back to you soon.',
-    html: `<p>Thank you, ${fullName}! We will reach out soon.</p>`,
+    html: htmlBody,
   };
 
   // Email to the business
   const businessMailOptions = {
-    from: 'contact@drazic-webdev.dev', // Update here for consistency
+    from: email,
     to: 'contact@drazic-webdev.dev',
     subject: `New message from ${fullName}`,
     replyTo: email,
@@ -66,7 +66,11 @@ export async function POST(request) {
     // Send confirmation email to the user
     await transporter.sendMail(userMailOptions);
     console.log('Confirmation email sent to user');
-
+  } catch (error) {
+    console.error('Error sending email to user:', error);
+  }
+  
+  try {
     // Send email to the business
     await transporter.sendMail(businessMailOptions);
     console.log('Notification email sent to business');
