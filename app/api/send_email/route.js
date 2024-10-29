@@ -49,8 +49,8 @@ export async function POST(request) {
 
   // Email to the user for confirmation
   const userMailOptions = {
-    from: email,
-    to: process.env.BUSINESS_EMAIL,
+    from: 'contact@drazic-webdev.dev',
+    to: email,
     subject: 'Thank you for reaching out',
     text: 'Thank you for contacting us. We have received your message and will get back to you soon.',
     html: `<p>Thank you, ${fullName}! We will reach out soon.</p>`,
@@ -58,8 +58,8 @@ export async function POST(request) {
 
   // Email to the business
   const businessMailOptions = {
-    from: process.env.BUSINESS_EMAIL,
-    to: email,
+    from: email,
+    to: 'contact@drazic-webdev.dev',
     subject: `New message from ${fullName}`,
     replyTo: email,
     html: htmlBody,
