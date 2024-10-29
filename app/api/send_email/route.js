@@ -1,9 +1,23 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+export async function OPTIONS(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
+  const responseHeaders = {
+    'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+  };
+  return new NextResponse(null, { status: 204, headers: responseHeaders });
+}
+
 export async function POST(request) {
+  const origin = request.headers.get('Origin');
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   const data = request.body;
-console.log(data);
+  console.log(data);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -44,11 +58,17 @@ console.log(data);
     await transporter.sendMail(userMailOptions);
     console.log('E-mail korisniku poslat');
     return new NextResponse(
-      JSON.stringify(userMailOptions),
-      {
+      JSON.stringify({ message: 'Message received and emails sent successfully.' }),
+      { 
         status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }
       }
-    );
+    );    
   } catch (error) {
     console.error('Greška prilikom slanja e-maila korisniku:', error);
   }
@@ -58,11 +78,17 @@ console.log(data);
     console.log('E-mail poslat');
     res.status(200).json({ message: 'Podaci su primljeni i obradjeni na serveru. E-mail je poslat.' });
     return new NextResponse(
-      JSON.stringify(mailOptions),
-      {
-        status: 201,
+      JSON.stringify({ message: 'Message received and emails sent successfully.' }),
+      { 
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }
       }
-    );
+    );    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Došlo je do greške prilikom slanja e-maila.' });
