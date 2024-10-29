@@ -2,9 +2,8 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
 export async function POST(request) {
-  const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   const data = request.body;
+console.log(data);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -48,12 +47,6 @@ export async function POST(request) {
       JSON.stringify(userMailOptions),
       {
         status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
       }
     );
   } catch (error) {
@@ -68,12 +61,6 @@ export async function POST(request) {
       JSON.stringify(mailOptions),
       {
         status: 201,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
       }
     );
   } catch (error) {
