@@ -6,7 +6,7 @@ import db from '@/src/lib/db.js';
 export async function GET(request, { params }) {
   const { email } = params;
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
 
   try {
     console.log(`Fetching testimonials for email: ${email}`);

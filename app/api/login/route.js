@@ -8,7 +8,7 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -21,7 +21,7 @@ export async function OPTIONS(request) {
 
 export async function POST(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   try {
     const { email, password } = await request.json();
 

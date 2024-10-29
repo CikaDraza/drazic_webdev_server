@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -19,7 +19,7 @@ export async function OPTIONS(request) {
 
 export async function GET(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   try {
     await db.connect();
     const testimonials = await Testimonial.find();
@@ -56,7 +56,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
 
   try {
     await db.connect();

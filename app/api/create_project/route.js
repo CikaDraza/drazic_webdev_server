@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function OPTIONS(request) {
 const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
 
   return new NextResponse(null, {
     status: 204,
@@ -20,7 +20,7 @@ const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.a
 
 export async function POST(request) {
 const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
 
   try {
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');

@@ -5,7 +5,7 @@ import Testimonial from '@/src/utils/models/Testimonial';
 
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   return new NextResponse(null, {
     status: 204,
     headers: {
@@ -19,7 +19,7 @@ export async function OPTIONS(request) {
 
 export async function PUT(request, { params }) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   const { id } = params;
 
   try {
@@ -107,7 +107,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   try {
     const { id } = params;
     const token = request.headers.get('Authorization')?.replace('Bearer ', '');

@@ -7,7 +7,7 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 export async function GET(request, { params }) {
 const origin = request.headers.get('Origin');
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   try {
     const { email } = params;
 
@@ -105,7 +105,7 @@ const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.a
 // Handle OPTIONS request for preflight checks
 export async function OPTIONS(request) {
   const origin = request.headers.get('Origin');
-  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.vercel.app'];
+  const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
   return new NextResponse(
     null,
     {
