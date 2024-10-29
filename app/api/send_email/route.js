@@ -1,25 +1,4 @@
-// src/app/api/send-email/route.js
-import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
-
-const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
-
-export async function OPTIONS(request) {
-  const origin = request.headers.get('Origin');
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Max-Age': '86400',
-    },
-  });
-}
-
-export async function GET(request) {
-  return NextResponse.json({ msg: 'Hello from mailer', user: process.env.EMAIL_USER })
-}
 
 export async function POST(request) {
   const origin = request.headers.get('Origin');
@@ -33,7 +12,9 @@ export async function POST(request) {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-  });
+    logger: true,
+    debug: true,
+  });  
 
   const htmlBody = `
     <html>
@@ -58,7 +39,7 @@ export async function POST(request) {
 
   // Email to the business
   const businessMailOptions = {
-    from: email,
+    from: 'contact@drazic-webdev.dev', // Update here for consistency
     to: 'contact@drazic-webdev.dev',
     subject: `New message from ${fullName}`,
     replyTo: email,
@@ -67,21 +48,11 @@ export async function POST(request) {
 
   try {
     // Send confirmation email to the user
-    transporter.sendMail(userMailOptions, (error, info) => {
-      if (error) {
-          return res.status(500).json({ message: 'Error sending email', error: error.toString() });
-      }
-      res.status(200).json({ message: 'Email sent successfully' }); // Send success response
-  });
+    await transporter.sendMail(userMailOptions);
     console.log('Confirmation email sent to user');
 
     // Send email to the business
-    transporter.sendMail(businessMailOptions, (error, info) => {
-      if (error) {
-          return res.status(500).json({ message: 'Error sending email', error: error.toString() });
-      }
-      res.status(200).json({ message: 'Email sent successfully' }); // Send success response
-  });
+    await transporter.sendMail(businessMailOptions);
     console.log('Notification email sent to business');
 
     return new NextResponse(
@@ -97,7 +68,7 @@ export async function POST(request) {
         }
       }
     );
-    
+
   } catch (error) {
     console.error('Error sending email:', error);
     return new NextResponse(
