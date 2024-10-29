@@ -25,8 +25,6 @@ export async function POST(request) {
   const origin = request.headers.get('Origin');
   const { fullName, email, phone, city, text } = await request.json();
 
-  console.log(fullName, email, phone, city, text);
-
   const transporter = nodemailer.createTransport({
     host: 'mail.privateemail.com',
     port: 587,
@@ -51,7 +49,7 @@ export async function POST(request) {
 
   // Email to the user for confirmation
   const userMailOptions = {
-    from: process.env.EMAIL_USER,
+    from: process.env.BUSINESS_EMAIL,
     to: email,
     subject: 'Thank you for reaching out',
     text: 'Thank you for contacting us. We have received your message and will get back to you soon.',
@@ -60,8 +58,8 @@ export async function POST(request) {
 
   // Email to the business
   const businessMailOptions = {
-    from: email,
-    to: process.env.BUSINESS_EMAIL,  // replace with the business email
+    from: process.env.BUSINESS_EMAIL,
+    to: process.env.BUSINESS_EMAIL,
     subject: `New message from ${fullName}`,
     replyTo: email,
     html: htmlBody,
@@ -69,11 +67,21 @@ export async function POST(request) {
 
   try {
     // Send confirmation email to the user
-    await transporter.sendMail(userMailOptions);
+    transporter.sendMail(userMailOptions, (error, info) => {
+      if (error) {
+          return res.status(500).json({ message: 'Error sending email', error: error.toString() });
+      }
+      res.status(200).json({ message: 'Email sent successfully' }); // Send success response
+  });
     console.log('Confirmation email sent to user');
 
     // Send email to the business
-    await transporter.sendMail(businessMailOptions);
+    transporter.sendMail(businessMailOptions, (error, info) => {
+      if (error) {
+          return res.status(500).json({ message: 'Error sending email', error: error.toString() });
+      }
+      res.status(200).json({ message: 'Email sent successfully' }); // Send success response
+  });
     console.log('Notification email sent to business');
 
     return new NextResponse(
