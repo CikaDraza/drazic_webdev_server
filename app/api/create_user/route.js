@@ -8,13 +8,14 @@ export async function GET(request) {
     await db.connect();
 
     // Define user data
+    const name = 'Mila Mo';
     const email = 'mila.mo@gmail.com';
     const plainPassword = '#Mila22#';
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
     // Create user
     const user = new User({
-      name: 'Mila Mo', // Add a name field as required by your schema
+      name: name, // Add a name field as required by your schema
       email: email,
       password: hashedPassword,
       isAdmin: false

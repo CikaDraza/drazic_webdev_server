@@ -2,10 +2,13 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
-    name: {type: String, required: true},
-    email: { type: String, required: true, unique: true, index: true },
-    password: {type: String, required: true},
-    isAdmin: {type: Boolean, required: true, default: false}
+    name: {type: String},
+    username: { type: String, required: true, unique: true },
+    email: { type: String, unique: true, sparse: true },
+    password: {type: String},
+    vkId: { type: String },
+    isAdmin: {type: Boolean, required: true, default: false},
+    provider: { type: String, default: 'local' },
   },
   {
     timestamps: true
