@@ -5,14 +5,14 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
-export async function handler(request, { params }) {
+export async function handler(request) {
   const headers = setCorsHeaders(request);
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers });
   }
 
   try {
-    const { userId, token } = params;
+    const { userId, token } = request.body;
 
     // Verify JWT token
     try {
