@@ -19,25 +19,60 @@ export async function OPTIONS(request) {
   });
 }
 
-export async function POST(request) {
+export async function POST(request, { params }) {
   const origin = request.headers.get('Origin');
   const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
-  const { token, provider } = await request.json();
 
   try {
+    const { email } = params;
+
+    // Extract token from Authorization header
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    // Verify token
+    try {
+      jwt.verify(token, SECRET_KEY);
+    } catch (error) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          },
+        }
+      );
+    }
     // Connect to MongoDB
     await db.connect();
 
-    // Verify VK token and get user data (this step is simplified, you'd typically have a service to verify the token)
-    // For demonstration, let's assume the token is directly the user ID for simplicity
-    const vkUserId = token;
-
     // Find or create user based on VK data
-    let user = await User.findOne({ vkId: vkUserId });
+    let user = await User.findOne({ email });
     if (!user) {
       user = new User({
-        username: `vk_user_${vkUserId}`,
-        vkId: vkUserId,
+        name: `vk_name_${email}`,
+        email: email,
+        username: `vk_user_${email}`,
+        vkId: `vkUserId_${token}`,
         isAdmin: false,
         provider: 'vk'
       });
@@ -45,7 +80,7 @@ export async function POST(request) {
     }
 
     // Create JWT token
-    const jwtToken = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, SECRET_KEY, { expiresIn: '1h' });
+    const jwtToken = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, SECRET_KEY, { expiresIn: '24h' });
 
     return new NextResponse(
       JSON.stringify({ jwtToken }),
