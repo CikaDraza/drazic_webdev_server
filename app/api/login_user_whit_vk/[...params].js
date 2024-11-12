@@ -5,16 +5,16 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
-export async function GET(request, { params }) {
+export async function POST(request, { params }) {
 const origin = request.headers.get('Origin');
 const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
 
   try {
-    const { userId, token } = params;
+    const { userId, jwtToken } = params;
     
     // Verify token
     try {
-      jwt.verify(token, SECRET_KEY);
+      jwt.verify(jwtToken, SECRET_KEY);
     } catch (error) {
       return new NextResponse(
         JSON.stringify({ message: 'Unauthorized' }),
@@ -52,7 +52,12 @@ const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
       // Return success response
       return new NextResponse(JSON.stringify({ message: 'Client user created successfully' }), {
         status: 201,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : 'null',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
       });
     }
 
