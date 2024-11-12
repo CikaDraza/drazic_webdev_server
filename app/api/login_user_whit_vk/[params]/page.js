@@ -1,7 +1,7 @@
 import db from "@/src/lib/db";
+import setCorsHeaders from "@/src/utils/cors";
 import User from "@/src/utils/models/User";
 import jwt from 'jsonwebtoken';
-import setCorsHeaders from "@/utils/cors";
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
