@@ -5,14 +5,14 @@ import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
-export async function handler(request) {
+export async function handler(request, { params }) {
   const headers = setCorsHeaders(request);
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers });
   }
 
   try {    
-    const { userId, jwtToken } = request.body;
+    const { userId, jwtToken } = params;
     console.log(userId, token);
 
     const authHeader = request.headers.get('Authorization');
