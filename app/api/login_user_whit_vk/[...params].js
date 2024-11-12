@@ -41,7 +41,9 @@ const allowedOrigins = ['http://localhost:5173', 'https://drazic-webdev.dev'];
         name: `vk_user-${userId}`,
         email: `vk_${userId}@vkontak.vk`,
         password: `password_${userId}`,
-        isAdmin: false
+        vkId: userId,
+        isAdmin: false,
+        provider: 'vk'
       });
 
       await user.save();
